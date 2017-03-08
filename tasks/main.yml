@@ -1,0 +1,33 @@
+
+- name: Delete default PHP-FPM pool when requested
+  file:
+    name: '{{ icingaweb2_default_php_fpm_pool_config }}'
+    state: absent
+  when: icingaweb2_disable_default_php_fpm_pool
+  notify: Restart php-fpm service
+
+- name: Create icingaweb2 php-fpm config
+  template:
+    src: 'icingaweb2-php-fpm.conf.j2'
+    dest: '{{ icingaweb2_php_fpm_pool_config }}'
+  notify: Restart php-fpm service
+
+- name: Start php-fpm when requested
+  service:
+    name: '{{ icingaweb2_php_fpm_service_name }}'
+    state:  '{{ icingaweb2_php_fpm_service_state }}'
+    enabled: '{{ icingaweb2_php_fpm_service_enabled }}'
+
+#- name: Enable php-fpm connect to redis sockets
+#  seboolean:
+#    name: httpd_can_network_connect
+#    state: yes
+#    persistent: yes
+#  tags: selinux
+
+#- name: Enable php-fpm to write to /etc/icingaweb2
+#  seboolean:
+#    name: httpd_can_XXXXX
+#    state: yes
+#    persistent: yes
+#  tags: selinux

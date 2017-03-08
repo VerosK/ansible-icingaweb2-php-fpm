@@ -1,0 +1,14 @@
+
+# Disable default PHP
+icingaweb2_disable_default_php_fpm_pool: true
+icingaweb2_default_php_fpm_pool_config: /etc/php-fpm.d/www.conf
+
+icingaweb2_php_fpm_pool_config: /etc/php-fpm.d/icingaweb2.conf
+
+icingaweb2_php_fpm_service_name: php-fpm
+
+icingaweb2_php_fpm_service_state: started
+icingaweb2_php_fpm_service_enabled: true
+
+icingaweb2_php_user: apache
+icingaweb2_php_group: icingaweb2

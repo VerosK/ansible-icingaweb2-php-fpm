@@ -1,0 +1,4 @@
+- name: Restart php-fpm service
+  service:
+    name: '{{ icingaweb2_php_fpm_service_name }}'
+    state: restarted
