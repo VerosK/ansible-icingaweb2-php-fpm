@@ -1,0 +1,44 @@
+- name: Create icingaweb2 pg_user
+  postgresql_user:
+    name: '{{ icingaweb2_pg_user }}'
+    password: '{{ icingaweb2_pg_password }}'
+    role_attr_flags: NOCREATEDB,NOSUPERUSER
+  become_user: postgres
+  become: true
+
+- name: Create icingaweb2 pg_database
+  postgresql_db:
+    name: '{{ icingaweb2_pg_db }}'
+    encoding: 'UTF-8'
+    template: 'template0'
+    lc_ctype: 'en_US.utf8'
+    lc_collate: 'en_US.utf8'
+    owner: '{{ icingaweb2_pg_user }}'
+  become_user: postgres
+  become: true
+  when: icingaweb2_with_postgres
+
+- name: Create .pgpass
+  lineinfile:
+    line: '127.0.0.1:5432:{{ icingaweb2_pg_user }}:{{ icingaweb2_pg_db }}:{{ icingaweb2_pg_password }}'
+    regexp: '^127.0.0.1:5432:{{ icingaweb2_pg_user }}:{{ icingaweb2_pg_db }}:'
+    dest: /root/.pgpass
+    state: present
+    create: yes
+    mode: 0600
+  register: _pgpassword
+
+- name: Preload Icingaweb2 database
+  shell:
+    psql -U {{ icingaweb2_pg_user }} -h 127.0.0.1 {{ icingaweb2_pg_db }} < {{ icingaweb2_pg_initial }}
+  args:
+    chdir: /root
+  when: _pgpassword.changed
+
+- name: Create icingaweb2 admin user
+  shell:
+    psql -U {{ icingaweb2_pg_user }} -h 127.0.0.1 {{ icingaweb2_pg_db }}
+      -c "INSERT INTO icingaweb_user (name, active, password_hash)
+          VALUES ('{{ icingaweb2_admin_user }}', 1, '{{ icingaweb2_admin_password }}');"
+  ignore_errors: yes
+  when: _pgpassword.changed

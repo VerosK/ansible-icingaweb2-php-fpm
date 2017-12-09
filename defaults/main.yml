@@ -1,3 +1,38 @@
+#
+icingaweb2_with_postgres: true
+
+icingaweb2_pg_db: icingaweb2
+icingaweb2_pg_user: icingaweb2
+icingaweb2_pg_password: random
+icingaweb2_pg_initial: /usr/share/doc/icingaweb2/schema/pgsql.schema.sql
+
+# These are usually set in VerosK.icinga2 module
+#
+#icinga2_ido_with_postgres: false
+#icinga2_ido_pg_db: icinga2
+#icinga2_ido_pg_user: icinga2
+#icinga2_ido_pg_password: secret-password
+
+# Add software collections?
+icingaweb2_yum_add_scl: true
+
+icingaweb2_scl_base:
+  - "centos-release-scl"
+
+icingaweb2_scl_prerequisities:
+  - "rh-php71"
+
+icingaweb2_yum_packages:
+ - "icingaweb2"
+ - "icingaweb2-selinux"
+ - "icingacli"
+
+
+# Enable this to setup separate PHP-FPM pool
+icingaweb2_with_php_fpm: false
+
+# Update SELinux policy
+icingaweb2_update_selinux_policy: false
 
 # Disable default PHP
 icingaweb2_disable_default_php_fpm_pool: true
@@ -12,3 +47,87 @@ icingaweb2_php_fpm_service_enabled: true
 
 icingaweb2_php_user: apache
 icingaweb2_php_group: icingaweb2
+
+icingaweb2_ido_resource_name: icinga_ido
+icingaweb2_resource_ido: |
+   [{{ icingaweb2_ido_resource_name }}]
+      type = "db"
+      db = "pgsql"
+      host = "localhost"
+      port = "5432"
+      dbname = "{{ icinga2_ido_pg_db }}"
+      username = "{{ icinga2_ido_pg_user }}"
+      password = "{{ icinga2_ido_pg_password }}"
+      charset = "utf-8"
+      persistent = "0"
+
+icingaweb2_resources: |
+  {{ icingaweb2_resource_ido }}
+
+icingaweb2_roles_ini: |
+    ; ansible managed
+    [Administrators]
+    users = "{{ icingaweb2_admin_user }}"
+    permissions = "*"
+
+icingaweb2_enabled_modules:
+    - monitoring
+    - translation
+
+icingaweb2_configs:
+  - filename: /etc/icingaweb2/resources.ini
+    content: |
+      ; ansible managed
+      {{ icingaweb2_resources }}
+
+  - filename: /etc/icingaweb2/authentication.ini
+    content: |
+      ; ansible managed.
+      ; using external authentication
+      [icingaweb2]
+      strip_username_regexp = ""
+      backend = "external"
+
+  - filename: /etc/icingaweb2/config.ini
+    content: |
+      ; ansible managed.
+        - filename: /etc/icingaweb2/authentication.ini
+    content: |
+      ; ansible managed.
+      [global]
+      show_stacktraces = "1"
+      config_backend = "ini"
+
+      [logging]
+      log = "syslog"
+      level = "ERROR"
+      application = "icingaweb2"
+      facility = "user"
+
+  - filename: /etc/icingaweb2/roles.ini
+    content: '{{ icingaweb2_roles_ini }}'
+
+  - filename: /etc/icingaweb2/modules/monitoring/backends.ini
+    content: |
+      [icinga]
+      type = "ido"
+      resource = "{{ icingaweb2_ido_resource_name }}"
+
+  - filename: /etc/icingaweb2/modules/monitoring/commandtransports.ini
+    content: |
+        ; ansible-managed
+        [icinga2]
+        transport = "local"
+        path = "/var/run/icinga2/cmd/icinga2.cmd"
+
+  - filename: /etc/icingaweb2/modules/monitoring/config.ini
+    content: |
+        ; ansible-managed
+        [security]
+        protected_customvars = "*pw*,*pass*,community"
+
+# Create icingaweb2 user?
+icingaweb2_admin_user_create: true
+icingaweb2_admin_user_id: 1
+icingaweb2_admin_user: icingaadmin   # icingaadmin
+icingaweb2_admin_password: "$1$AgTZeBRG$LkWVTJf8R8gWcGEMQhiVL1"

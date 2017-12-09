@@ -1,0 +1,18 @@
+---
+- name: "Add SCL base"
+  yum:
+    name: '{{ icingaweb2_scl_base }}'
+    state: "present"
+  when: icingaweb2_yum_add_scl
+
+- name: "Add SCL prerequisities"
+  yum:
+    name: '{{ icingaweb2_scl_prerequisities }}'
+    state: "present"
+  when: icingaweb2_yum_add_scl
+
+- name: "Install Yum packages"
+  yum:
+    name: '{{ icingaweb2_yum_packages }}'
+    state: "present"
+  when: icingaweb2_yum_add_scl

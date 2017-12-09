@@ -1,0 +1,29 @@
+---
+- include: configure-icingaweb2-postgres.yml
+  when: icingaweb2_with_postgres
+
+- name: Create icingaweb directory
+  shell: icingacli setup config directory --group icingaweb2
+  args:
+    creates: /etc/icingaweb2
+
+- name: Create modules config
+  file:
+    dest: /etc/icingaweb2/modules/{{ item }}
+    state: directory
+  with_items: '{{ icingaweb2_enabled_modules }}'
+
+- name: Enable modules
+  shell:
+    icingacli module enable {{ item  }}
+  args:
+    creates: /etc/icingaweb2/enabledModules/{{ item }}
+  with_items: '{{ icingaweb2_enabled_modules }}'
+
+- name: Create icingaweb2 config files
+  copy:
+    content: '{{ item.content }}'
+    dest: '{{ item.filename }}'
+    mode: 0644
+  with_items: '{{ icingaweb2_configs }}'
+
