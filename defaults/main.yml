@@ -1,9 +1,12 @@
 #
 icingaweb2_with_postgres: true
 
+icingaweb2_pg_create_user: true
+icingaweb2_pg_create_db: true
 icingaweb2_pg_db: icingaweb2
 icingaweb2_pg_user: icingaweb2
 icingaweb2_pg_password: random
+icingaweb2_pg_host: 'localhost'
 icingaweb2_pg_initial: /usr/share/doc/icingaweb2/schema/pgsql.schema.sql
 
 # These are usually set in VerosK.icinga2 module
@@ -53,7 +56,7 @@ icingaweb2_resource_ido: |
    [{{ icingaweb2_ido_resource_name }}]
       type = "db"
       db = "pgsql"
-      host = "localhost"
+      host = "{{ icinga2_ido_pg_host }}"
       port = "5432"
       dbname = "{{ icinga2_ido_pg_db }}"
       username = "{{ icinga2_ido_pg_user }}"
@@ -70,6 +73,12 @@ icingaweb2_roles_ini: |
     users = "{{ icingaweb2_admin_user }}"
     permissions = "*"
 
+icingaweb2_authentication_ini: |
+      ; using external authentication
+      [icingaweb2]
+      strip_username_regexp = ""
+      backend = "external"
+
 icingaweb2_enabled_modules:
     - monitoring
     - translation
@@ -83,15 +92,9 @@ icingaweb2_configs:
   - filename: /etc/icingaweb2/authentication.ini
     content: |
       ; ansible managed.
-      ; using external authentication
-      [icingaweb2]
-      strip_username_regexp = ""
-      backend = "external"
+      {{ icingaweb2_authentication_ini }}
 
   - filename: /etc/icingaweb2/config.ini
-    content: |
-      ; ansible managed.
-        - filename: /etc/icingaweb2/authentication.ini
     content: |
       ; ansible managed.
       [global]

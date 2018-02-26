@@ -2,9 +2,11 @@
   postgresql_user:
     name: '{{ icingaweb2_pg_user }}'
     password: '{{ icingaweb2_pg_password }}'
+    login_host: '{{ icingaweb2_pg_host }}'
     role_attr_flags: NOCREATEDB,NOSUPERUSER
   become_user: postgres
   become: true
+  when: icingaweb2_pg_create_user
 
 - name: Create icingaweb2 pg_database
   postgresql_db:
@@ -14,14 +16,15 @@
     lc_ctype: 'en_US.utf8'
     lc_collate: 'en_US.utf8'
     owner: '{{ icingaweb2_pg_user }}'
+    login_host: '{{ icingaweb2_pg_host }}'
   become_user: postgres
   become: true
-  when: icingaweb2_with_postgres
+  when: icingaweb2_pg_create_database
 
 - name: Create .pgpass
   lineinfile:
-    line: '127.0.0.1:5432:{{ icingaweb2_pg_user }}:{{ icingaweb2_pg_db }}:{{ icingaweb2_pg_password }}'
-    regexp: '^127.0.0.1:5432:{{ icingaweb2_pg_user }}:{{ icingaweb2_pg_db }}:'
+    line: '{{ icingaweb2_pg_host }}:5432:{{ icingaweb2_pg_user }}:{{ icingaweb2_pg_db }}:{{ icingaweb2_pg_password }}'
+    regexp: '^{{ icingaweb2_pg_host }}:5432:{{ icingaweb2_pg_user }}:{{ icingaweb2_pg_db }}:'
     dest: /root/.pgpass
     state: present
     create: yes
@@ -30,15 +33,25 @@
 
 - name: Preload Icingaweb2 database
   shell:
-    psql -U {{ icingaweb2_pg_user }} -h 127.0.0.1 {{ icingaweb2_pg_db }} < {{ icingaweb2_pg_initial }}
+    psql {{ icingaweb2_pg_db }} < {{ icingaweb2_pg_initial }}
+  environment:
+    PGPASSWORD: '{{ icingaweb2_pg_password }}'
+    PGUSER: '{{ icingaweb2_pg_user }}'
+    PGHOST: '{{ icingaweb2_pg_host }}'
+    PGAPPNAME: '{{ icingaweb2_pg_host }}'
   args:
     chdir: /root
   when: _pgpassword.changed
 
 - name: Create icingaweb2 admin user
   shell:
-    psql -U {{ icingaweb2_pg_user }} -h 127.0.0.1 {{ icingaweb2_pg_db }}
+    psql {{ icingaweb2_pg_db }}
       -c "INSERT INTO icingaweb_user (name, active, password_hash)
           VALUES ('{{ icingaweb2_admin_user }}', 1, '{{ icingaweb2_admin_password }}');"
+  environment:
+    PGPASSWORD: '{{ icingaweb2_pg_password }}'
+    PGUSER: '{{ icingaweb2_pg_user }}'
+    PGHOST: '{{ icingaweb2_pg_host }}'
+    PGAPPNAME: '{{ icingaweb2_pg_host }}'
   ignore_errors: yes
   when: _pgpassword.changed
