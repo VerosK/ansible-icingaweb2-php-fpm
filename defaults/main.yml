@@ -64,8 +64,23 @@ icingaweb2_resource_ido: |
       charset = "utf-8"
       persistent = "0"
 
+icingaweb2_db_resource_name: icingaweb2
+icingaweb2_db_resource: |
+   [{{ icingaweb2_db_resource_name }}]
+      type = "db"
+      db = "pgsql"
+      host = "{{ icingaweb2_pg_host }}"
+      port = "5432"
+      dbname = "{{ icingaweb2_pg_db }}"
+      username = "{{ icingaweb2_pg_user }}"
+      password = "{{ icingaweb2_pg_password }}"
+      charset = "utf-8"
+      persistent = "0"
+
+
 icingaweb2_resources: |
   {{ icingaweb2_resource_ido }}
+  {{ icingaweb2_db_resource }}
 
 icingaweb2_roles_ini: |
     ; ansible managed
@@ -99,7 +114,8 @@ icingaweb2_configs:
       ; ansible managed.
       [global]
       show_stacktraces = "1"
-      config_backend = "ini"
+      config_backend = "db"
+      config_resource = "{{ icingaweb2_db_resource_name }}"
 
       [logging]
       log = "syslog"
