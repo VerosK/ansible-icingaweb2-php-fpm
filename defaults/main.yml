@@ -1,7 +1,7 @@
 #
 icingaweb2_with_postgres: true
 
-icingaweb2_pg_create_user: true
+icingaweb2_pg_create_db_user: true
 icingaweb2_pg_create_db: true
 icingaweb2_pg_db: icingaweb2
 icingaweb2_pg_user: icingaweb2

@@ -6,7 +6,7 @@
     role_attr_flags: NOCREATEDB,NOSUPERUSER
   become_user: postgres
   become: true
-  when: icingaweb2_pg_create_user
+  when: icingaweb2_pg_create_db_user
 
 - name: Create icingaweb2 pg_database
   postgresql_db:
