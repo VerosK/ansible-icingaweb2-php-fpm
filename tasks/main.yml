@@ -3,7 +3,7 @@
   when: ansible_os_family == "RedHat"
 
 - include: install-icingaweb2-debian.yml
-  when: ansible_os_family == "Dabian"
+  when: ansible_os_family == "Debian"
 
 - include: setup-phppool.yml
   when: icingaweb2_with_php_fpm
