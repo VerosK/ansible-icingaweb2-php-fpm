@@ -44,7 +44,7 @@
   when: _pgpassword.changed
 
 - name: Create icingaweb2 admin user
-  shell:
+  command:
     psql {{ icingaweb2_pg_db }}
       -c "INSERT INTO icingaweb_user (name, active, password_hash)
           VALUES ('{{ icingaweb2_admin_user }}', 1, '{{ icingaweb2_admin_password }}');"
@@ -53,5 +53,4 @@
     PGUSER: '{{ icingaweb2_pg_user }}'
     PGHOST: '{{ icingaweb2_pg_host }}'
     PGAPPNAME: '{{ icingaweb2_pg_host }}'
-  ignore_errors: yes
   when: _pgpassword.changed
