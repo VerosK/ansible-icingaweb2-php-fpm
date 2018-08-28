@@ -1,7 +1,4 @@
 ---
-- include: configure-icingaweb2-postgres.yml
-  when: icingaweb2_with_postgres
-
 - name: Create icingaweb directory
   shell: icingacli setup config directory --group icingaweb2
   args:
@@ -27,3 +24,5 @@
     mode: 0644
   with_items: '{{ icingaweb2_configs }}'
 
+- include: configure-icingaweb2-postgres.yml
+  when: icingaweb2_with_postgres
