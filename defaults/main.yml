@@ -94,6 +94,12 @@ icingaweb2_authentication_ini: |
       strip_username_regexp = ""
       backend = "external"
 
+icingaweb2_commandtransports_ini: |
+      ; ansible-managed
+      [icinga2]
+      transport = "local"
+      path = "/var/run/icinga2/cmd/icinga2.cmd"
+
 icingaweb2_enabled_modules:
     - monitoring
     - translation
@@ -133,11 +139,7 @@ icingaweb2_configs:
       resource = "{{ icingaweb2_ido_resource_name }}"
 
   - filename: /etc/icingaweb2/modules/monitoring/commandtransports.ini
-    content: |
-        ; ansible-managed
-        [icinga2]
-        transport = "local"
-        path = "/var/run/icinga2/cmd/icinga2.cmd"
+    content: '{{ icingaweb2_commandtransports_ini }}'
 
   - filename: /etc/icingaweb2/modules/monitoring/config.ini
     content: |
