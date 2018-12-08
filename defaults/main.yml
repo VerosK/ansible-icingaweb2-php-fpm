@@ -104,6 +104,8 @@ icingaweb2_enabled_modules:
     - monitoring
     - translation
 
+icingaweb2_theme: high-contrast
+
 icingaweb2_configs:
   - filename: /etc/icingaweb2/resources.ini
     content: |
@@ -129,6 +131,9 @@ icingaweb2_configs:
       application = "icingaweb2"
       facility = "user"
 
+      [themes]
+      default = "{{ icingaweb2_theme }}"
+
   - filename: /etc/icingaweb2/roles.ini
     content: '{{ icingaweb2_roles_ini }}'
 
@@ -152,3 +157,8 @@ icingaweb2_admin_user_create: true
 icingaweb2_admin_user_id: 1
 icingaweb2_admin_user: icingaadmin   # icingaadmin
 icingaweb2_admin_password: "$1$AgTZeBRG$LkWVTJf8R8gWcGEMQhiVL1"
+
+# Add
+icingaweb2_config_group: icingaweb2
+icingaweb2_config_user: apache
+icingaweb2_config_user: apache
