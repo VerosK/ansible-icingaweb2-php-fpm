@@ -1,7 +1,6 @@
-# ansible role VerosK.icingaweb2-php-fpm
+# ansible role VerosK.icingaweb2
 
-This sets up icingaweb2 with php-fpm. Although it works (in production),
-it's still more proof of concept.
+This sets up icingaweb2 with php-fpm.
 
 Works on CentOS but can be updated to Debian easily.
 

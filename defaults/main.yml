@@ -81,6 +81,7 @@ icingaweb2_db_resource: |
 icingaweb2_resources: |
   {{ icingaweb2_resource_ido }}
   {{ icingaweb2_db_resource }}
+  {{ icinga_director_db_resource|default("") }}
 
 icingaweb2_roles_ini: |
     ; ansible managed
@@ -158,7 +159,6 @@ icingaweb2_admin_user_id: 1
 icingaweb2_admin_user: icingaadmin   # icingaadmin
 icingaweb2_admin_password: "$1$AgTZeBRG$LkWVTJf8R8gWcGEMQhiVL1"
 
-# Add
+# Add config user/group ?
 icingaweb2_config_group: icingaweb2
-icingaweb2_config_user: apache
 icingaweb2_config_user: apache

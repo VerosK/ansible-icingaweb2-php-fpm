@@ -16,3 +16,13 @@
     name: '{{ icingaweb2_yum_packages }}'
     state: "present"
   when: icingaweb2_yum_add_scl
+
+- name: Add setsebool
+  seboolean:
+    name: httpd_can_network_connect
+    state: true
+    persistent: yes
+  when: icingaweb2_update_selinux_policy
+  loop:
+    - httpd_can_network_connect
+    - httpd_can_connect_icinga2_api
