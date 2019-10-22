@@ -1,7 +1,7 @@
 ; {{  ansible_managed }}
 ; Start a new pool named 'icingaweb2'.
 [icingaweb2]
-listen = /run/php-fpm/icingaweb-php.socket
+listen = 127.0.0.1:9000
 
 listen.owner = nginx
 listen.group = nginx
@@ -11,10 +11,10 @@ user = {{ icingaweb2_php_user }}
 group = {{ icingaweb2_php_group }}
 
 pm = dynamic
-pm.max_children = 16
-pm.start_servers = 2
+pm.max_children = 50
+pm.start_servers = 1
 pm.min_spare_servers = 1
-pm.max_spare_servers = 4
+pm.max_spare_servers = 11
 pm.max_requests = 1024
 
 ; show PHP-fpm process manager status

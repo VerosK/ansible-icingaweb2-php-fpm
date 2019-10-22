@@ -26,3 +26,4 @@
   loop:
     - httpd_can_network_connect
     - httpd_can_connect_icinga2_api
+    - httpd_can_write_icinga2_command

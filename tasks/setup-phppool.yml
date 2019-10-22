@@ -26,10 +26,3 @@
   when: icingaweb2_update_selinux_policy
   tags: selinux
 
-- name: Enable php-fpm to write to /etc/icingaweb2
-  seboolean:
-    name: httpd_can_XXXXX
-    state: yes
-    persistent: yes
-  tags: selinux
-  when: icingaweb2_update_selinux_policy
