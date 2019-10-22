@@ -22,6 +22,7 @@
     content: '{{ item.content }}'
     dest: '{{ item.filename }}'
     mode: 0644
+    backup: '{{ icingaweb2_backup_config }}'
   with_items: '{{ icingaweb2_configs }}'
 
 - include: configure-icingaweb2-postgres.yml

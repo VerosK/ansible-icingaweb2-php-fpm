@@ -30,6 +30,7 @@ icingaweb2_yum_packages:
  - "icingaweb2-selinux"
  - "icingacli"
 
+icingaweb2_backup_config: yes
 
 # Enable this to setup separate PHP-FPM pool
 icingaweb2_with_php_fpm: false
@@ -138,11 +139,16 @@ icingaweb2_configs:
   - filename: /etc/icingaweb2/roles.ini
     content: '{{ icingaweb2_roles_ini }}'
 
+  - filename: /etc/icingaweb2/groups.ini
+    content: '{{ icingaweb2_groups_ini }}'
+
   - filename: /etc/icingaweb2/modules/monitoring/backends.ini
     content: |
       [icinga]
       type = "ido"
       resource = "{{ icingaweb2_ido_resource_name }}"
+
+
 
   - filename: /etc/icingaweb2/modules/monitoring/commandtransports.ini
     content: '{{ icingaweb2_commandtransports_ini }}'
