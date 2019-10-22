@@ -82,6 +82,7 @@ icingaweb2_db_resource: |
 icingaweb2_resources: |
   {{ icingaweb2_resource_ido }}
   {{ icingaweb2_db_resource }}
+  {{ icingaweb2_ldap_resource|default("") }}
   {{ icinga_director_db_resource|default("") }}
 
 icingaweb2_roles_ini: |
@@ -95,6 +96,9 @@ icingaweb2_authentication_ini: |
       [icingaweb2]
       strip_username_regexp = ""
       backend = "external"
+
+icingaweb2_groups_ini: |
+    ; This file is left intentionally empty
 
 icingaweb2_commandtransports_ini: |
       ; ansible-managed
