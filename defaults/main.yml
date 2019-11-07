@@ -9,6 +9,8 @@ icingaweb2_pg_password: random
 icingaweb2_pg_host: 'localhost'
 icingaweb2_pg_initial: /usr/share/doc/icingaweb2/schema/pgsql.schema.sql
 
+icingaweb2_mysql_initial: /usr/share/icingaweb2/etc/schema/mysql.schema.sql
+
 # These are usually set in VerosK.icinga2 module
 #
 #icinga2_ido_with_postgres: false
@@ -29,6 +31,11 @@ icingaweb2_yum_packages:
  - "icingaweb2"
  - "icingaweb2-selinux"
  - "icingacli"
+
+icingaweb2_apt_packages:
+ - icingaweb2
+ - icingacli
+ - icingaweb2-module-monitoring
 
 icingaweb2_backup_config: yes
 

@@ -1,3 +1,7 @@
 ---
-- fail:
-    msg: "Feel free to add some code here"
+- name: "Install Apt packages"
+  apt:
+    name: '{{ icingaweb2_apt_packages }}'
+    state: "present"
+    install_recommends: no
+

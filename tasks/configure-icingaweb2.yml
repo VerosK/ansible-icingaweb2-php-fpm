@@ -27,3 +27,6 @@
 
 - include: configure-icingaweb2-postgres.yml
   when: icingaweb2_with_postgres
+
+- include: configure-icingaweb2-mysql.yml
+  when: icingaweb2_with_mysql

@@ -1,0 +1,25 @@
+
+- name: Check MySQL database is present
+  shell:
+        mysql icingaweb2 -e 'SELECT COUNT(1) FROM icingaweb_group;'
+  changed_when: False
+  ignore_errors: yes
+  register: _icingaweb2_ido_alive
+
+- name: Preload Icingaweb2 database
+  shell:
+    mysql {{ icingaweb2_mysql_db }} < {{ icingaweb2_mysql_initial }}
+#  environment:
+#    PGPASSWORD: '{{ icingaweb2_pg_password }}'
+#    PGUSER: '{{ icingaweb2_pg_user }}'
+#    PGHOST: '{{ icingaweb2_pg_host }}'
+#    PGAPPNAME: '{{ icingaweb2_pg_host }}'
+  when: _icingaweb2_ido_alive.failed
+
+- name: Create icingaweb2 admin user
+  command:
+    mysql {{ icingaweb2_mysql_db }}
+    -e "INSERT INTO icingaweb_user (name, active, password_hash)
+    VALUES ('{{ icingaweb2_admin_user }}', 1, '{{ icingaweb2_admin_password }}');"
+  when: _icingaweb2_ido_alive.failed
+
